@@ -1,0 +1,54 @@
+version: 2
+rules:
+  - id: allow-web-search
+    when: tool_id == "web.search"
+    allow_if:
+      - args.query | length <= 256
+      - (not args.domains) or all(args.domains, in_list(["example.org","arxiv.org","docs.example.com"]))
+    rate_limit: "10/min"
+
+  - id: allow-scratch-writes
+    when: tool_id == "fs.write"
+    allow_if:
+      - path_match(args.path, "/scratch/**")
+      - args.size_bytes <= 1000000
+    redact: ["bytes"]
+
+  - id: allow-voice-wake-or-ptt
+    when: tool_id == "audio.listen"
+    allow_if:
+      - (args.mode == "push") or (context.wake_state == "ACTIVE")
+      - args.max_seconds <= 900
+      - (not args.wake_word) or (context.allowed_wake_words contains args.wake_word)
+
+  - id: redact-transcripts
+    when: tool_id == "audio.listen"
+    transform:
+      - redact_regex:
+          fields: ["partial", "final"]
+          patterns:
+            - "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+            - "\\b\\d{4} \\d{4} \\d{4} \\d{4}\\b"
+            - "\\b\\d{16}\\b"
+
+  - id: forbid-audio-persist-by-default
+    deny_if:
+      - tool_id == "audio.listen" and (context.flags.persist_raw_audio != true)
+    message: "Raw audio persistence disabled."
+
+  - id: allow-speaker-output
+    when: tool_id == "audio.speak"
+    allow_if:
+      - args.text | length <= 1000
+      - context.privacy_mode != "silent"
+      - context.device_has_output == true
+    rate_limit: "20/min"
+
+  - id: restrict-egress-while-listening
+    deny_if:
+      - context.voice_session_active == true
+      - tool_id in ["net.email", "web.post", "http.fetch"]
+    message: "Network egress disabled during live mic."
+
+  - id: default-deny
+    deny: true

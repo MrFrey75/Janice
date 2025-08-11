@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "janice"
+version = "0.2.0"
+description = "Safety-first autonomous agent framework with signed approvals and capability tokens."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "PyNaCl>=1.5.0",
+  "PyYAML>=6.0.1",
+  "jsonschema>=4.23.0",
+  "structlog>=24.1.0",
+  "typer>=0.12.3",
+]
+
+[project.scripts]
+janice = "janice.cli:app"
