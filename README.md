@@ -1,13 +1,23 @@
 # Janice
 
-**Janice** is a safety-first autonomous agent framework with a hard separation of concerns:
+**Janice** is a safety-first autonomous agent framework with a hard separation of concerns. It is designed to be **local-first** and **policy-governed**, ensuring that all actions are vetted, signed, and logged in a tamper-evident audit trail.
 
-- **Proposer** — plans possible actions.
-- **Governor** — enforces the constitution and signs approvals.
-- **Executor** — verifies approvals, runs allowed actions, logs outcomes.
-- **Voicebox** — (optional) voice interface layer with speech-to-text and text-to-speech tools.
+---
 
-All steps are **policy-gated**, **signed**, and **audit-logged**.
+## Project Philosophy
+
+The core philosophy of Janice is built on three pillars: **Safety**, **Transparency**, and **Separation of Concerns**.
+
+1.  **Safety-First Design**: Every action is a transaction that must be explicitly approved and signed. The system uses a combination of signed approvals, capability tokens with limited scope and short TTLs, and canonical argument hashing to prevent unauthorized or modified actions. All file system operations are constrained to a designated "scratch" directory to prevent unintended side effects.
+
+2.  **Transparency and Auditability**: All proposals, decisions, and executions are recorded in a hash-chained, tamper-evident audit log. This provides a verifiable record of everything the system has done. The `janice audit-verify` command allows an operator to confirm the integrity of this log at any time. Data handling is designed to be transparent, with clear policies on what is collected and stored.
+
+3.  **Separation of Concerns**: The architecture strictly separates the main components to ensure a robust and secure workflow:
+    *   **Proposer**: The creative engine. It analyzes a task and breaks it down into a series of discrete steps or actions for the system to take.
+    *   **Governor**: The gatekeeper. It evaluates each proposed step against a human-readable policy file (`constitution.yaml`). If a step is permitted, the Governor signs it, creating a verifiable approval.
+    *   **Executor**: The worker. It receives the signed approval, verifies its authenticity and integrity, and only then executes the action. It has no ability to act on its own.
+
+This model ensures that the agent's capabilities are always constrained by operator-defined policy, and every action is auditable.
 
 ---
 
@@ -36,57 +46,48 @@ janice voice --ptt
 
 ---
 
-## Repository Structure
+## Project Structure
+
+Below is a more detailed breakdown of the repository structure and the purpose of key files and directories.
 
 ```
 janice/
-├─ [README.md](README.md)                  # Project overview and quickstart
-├─ [DATA_TRANSPARENCY.md](DATA_TRANSPARENCY.md)       # Full data handling and privacy details
-├─ [LEARNING_ENHANCEMENTS.md](LEARNING_ENHANCEMENTS.md)   # Roadmap for autonomous learning capabilities
-├─ [GLOSSARY.md](GLOSSARY.md)                # Definitions of key Janice terms and concepts
-├─ [SECURITY.md](SECURITY.md)                # Security and privacy practices
-├─ [POLICY.md](POLICY.md)                    # Policy model and constitution guidance
-├─ [CONTRIBUTING.md](CONTRIBUTING.md)        # Contribution guidelines
-├─ [constitution.yaml](constitution.yaml)          # Policy rules enforced by the Governor
-├─ [pyproject.toml](pyproject.toml)              # Project metadata and dependencies
-├─ [.gitignore](.gitignore)                  # Git ignore rules
+├─ README.md                  # This file: Project overview, philosophy, and quickstart.
+├─ INSTALL.md                 # Detailed installation instructions.
+├─ USER_GUIDE.md              # Guide to using the Janice CLI.
+├─ constitution.yaml          # The core policy file enforced by the Governor.
+├─ pyproject.toml             # Project metadata and Python dependencies.
+├─ docs/                      # Contains all markdown documentation.
+│  ├─ ...
 ├─ src/
 │  └─ janice/
-│     ├─ [__init__.py](src/janice/__init__.py)
-│     ├─ [cli.py](src/janice/cli.py)               # CLI entrypoints (run, voice, audit-verify, etc.)
-│     ├─ [config.py](src/janice/config.py)            # Runtime configuration dataclasses
-│     ├─ [proposer.py](src/janice/proposer.py)          # Proposer component
-│     ├─ [governor.py](src/janice/governor.py)          # Governor component
-│     ├─ [executor.py](src/janice/executor.py)          # Executor component
+│     ├─ cli.py               # Defines the command-line interface (e.g., `run`, `audit-verify`).
+│     ├─ proposer.py          # The Proposer component: plans actions.
+│     ├─ governor.py          # The Governor component: evaluates and signs actions.
+│     ├─ executor.py          # The Executor component: verifies and runs actions.
 │     ├─ audit/
-│     │  └─ [audit.py](src/janice/audit/audit.py)
+│     │  └─ audit.py          # Manages the append-only, hash-chained audit log.
 │     ├─ crypto/
-│     │  ├─ [signing.py](src/janice/crypto/signing.py)
-│     │  └─ [capabilities.py](src/janice/crypto/capabilities.py)
+│     │  ├─ signing.py       # Handles cryptographic signing (Ed25519) and verification.
+│     │  └─ capabilities.py  # Manages the creation and validation of capability tokens.
 │     ├─ policy/
-│     │  └─ [constitution_loader.py](src/janice/policy/constitution_loader.py)
+│     │  └─ constitution_loader.py # Loads and validates the constitution.yaml file.
 │     ├─ tools/
-│     │  ├─ [base.py](src/janice/tools/base.py)
-│     │  ├─ [fs_write.py](src/janice/tools/fs_write.py)
-│     │  ├─ [web_search.py](src/janice/tools/web_search.py)
-│     │  ├─ [net_email.py](src/janice/tools/net_email.py)
-│     │  ├─ [audio_listen.py](src/janice/tools/audio_listen.py)
-│     │  └─ [audio_speak.py](src/janice/tools/audio_speak.py)
+│     │  └─ ...               # Contains all available tools (e.g., web search, file I/O).
 │     └─ utils/
-│        ├─ [canonical_json.py](src/janice/utils/canonical_json.py)
-│        ├─ [json_logger.py](src/janice/utils/json_logger.py)
-│        └─ [path_safe.py](src/janice/utils/path_safe.py)
+│        ├─ canonical_json.py # Ensures that JSON is serialized deterministically for hashing.
+│        └─ path_safe.py      # Provides utilities for safe file system access.
 └─ tests/
-   ├─ [test_canonical_json.py](tests/test_canonical_json.py)
-   ├─ [test_signing_and_verification.py](tests/test_signing_and_verification.py)
-   ├─ [test_executor_path_safety.py](tests/test_executor_path_safety.py)
-   └─ [test_proposal_schema.py](tests/test_proposal_schema.py)
+   └─ ...                      # Unit and integration tests for the framework.
 ```
+
 ---
 
 ## Documentation Index
 
 - [README.md](README.md) — Project overview, quickstart, features, and architecture.
+- [INSTALL.md](INSTALL.md) — Detailed installation instructions.
+- [USER_GUIDE.md](USER_GUIDE.md) — How to use the `janice` CLI.
 - [DATA_TRANSPARENCY.md](DATA_TRANSPARENCY.md) — Full breakdown of what Janice collects, stores, and never stores; privacy controls.
 - [LEARNING_ENHANCEMENTS.md](LEARNING_ENHANCEMENTS.md) — Roadmap for autonomous learning and plugin creation.
 - [GLOSSARY.md](GLOSSARY.md) — Definitions of key terms and components used in Janice.
