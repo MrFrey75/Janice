@@ -1,7 +1,7 @@
 from __future__ import annotations
-import os, time
+import os
+import time
 from dataclasses import dataclass
-from typing import Any
 from .utils.canonical_json import to_canonical_bytes
 from .crypto.signing import load_priv, generate, sign
 from .crypto.capabilities import mint_capability

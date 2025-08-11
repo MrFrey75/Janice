@@ -7,7 +7,7 @@ def _normalize(obj: Any):
     if isinstance(obj, dict):
         return {k: _normalize(obj[k]) for k in sorted(obj.keys())}
     if isinstance(obj, list):
-        return [_normalize(v) for v in obj]
+        return sorted((_normalize(v) for v in obj), key=to_canonical_bytes)
     if isinstance(obj, str):
         return unicodedata.normalize("NFC", obj)
     return obj

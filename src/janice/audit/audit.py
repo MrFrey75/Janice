@@ -1,5 +1,8 @@
 from __future__ import annotations
-import os, json, hashlib, time
+import os
+import json
+import hashlib
+import time
 from dataclasses import dataclass, asdict
 from typing import Optional
 
@@ -54,10 +57,13 @@ def verify_chain() -> bool:
         return True
     with open(AUDIT_FILE, "r", encoding="utf-8") as f:
         for line in f:
-            if not line.strip(): continue
+            if not line.strip():
+                continue
             item = json.loads(line)
             calc = _hash_entry(AuditEntry(item["ts"], item["run_id"], item["step_id"], item["kind"], item["data"], item.get("prev_hash"), None))
-            if calc != item["hash"]: return False
-            if item.get("prev_hash") != prev: return False
+            if calc != item["hash"]:
+                return False
+            if item.get("prev_hash") != prev:
+                return False
             prev = item["hash"]
     return True

@@ -1,8 +1,10 @@
 from __future__ import annotations
-import time, importlib, inspect, hashlib
+import time
+import importlib
+import inspect
+import hashlib
 from typing import Any
 from nacl.signing import VerifyKey
-from nacl.encoding import RawEncoder
 from .utils.canonical_json import to_canonical_bytes
 from .utils.json_logger import get_logger
 from .audit.audit import record

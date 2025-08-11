@@ -1,5 +1,6 @@
 from __future__ import annotations
-import os, errno
+import os
+import errno
 
 SCRATCH_ROOT = os.path.abspath("scratch")
 

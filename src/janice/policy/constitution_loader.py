@@ -1,5 +1,6 @@
 from __future__ import annotations
-import yaml, hashlib
+import yaml
+import hashlib
 
 def load_constitution(path: str = "constitution.yaml") -> tuple[dict, str]:
     with open(path, "r", encoding="utf-8") as f:
