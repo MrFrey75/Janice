@@ -1,4 +1,4 @@
-namespace Janet.Core.Models;
+namespace Janice.Core.Models;
 
 public class User
 {

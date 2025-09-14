@@ -1,11 +1,30 @@
-public class JanetConfig
+using YamlDotNet.Serialization;
+namespace Janice.Core.Models
 {
-    public string OllamaApiUrl { get; set; } = "http://localhost:11434";
-    public string DefaultModel { get; set; } = "phi3:latest";
-    public int MaxTokens { get; set; } = 1024;
-    public double Temperature { get; set; } = 0.7;
-    public double TopP { get; set; } = 0.9;
-    public int N { get; set; } = 1;
-    public bool Stream { get; set; } = false;
-    public int TimeoutSeconds { get; set; } = 60;
+    public class JanetConfig
+    {
+        [YamlMember(Alias = "OllamaApiUrl")]
+        public string OllamaApiUrl { get; set; } = "http://localhost:11434";
+
+        [YamlMember(Alias = "DefaultModel")]
+        public string DefaultModel { get; set; } = "phi3:latest";
+
+        [YamlMember(Alias = "MaxTokens")]
+        public int MaxTokens { get; set; } = 1024;
+
+        [YamlMember(Alias = "Temperature")]
+        public double Temperature { get; set; } = 0.7;
+
+        [YamlMember(Alias = "TopP")]
+        public double TopP { get; set; } = 0.9;
+
+        [YamlMember(Alias = "N")]
+        public int N { get; set; } = 1;
+
+        [YamlMember(Alias = "Stream")]
+        public bool Stream { get; set; } = false;
+
+        [YamlMember(Alias = "TimeoutSeconds")]
+        public int TimeoutSeconds { get; set; } = 60;
+    }
 }

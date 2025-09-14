@@ -1,8 +1,8 @@
-using Janet.Core.Enums;
+using Janice.Core.Enums;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Janet.Core.Models
+namespace Janice.Core.Models
 {
     /// <summary>
     /// Represents a single message in a chat conversation, compatible with the Ollama API.

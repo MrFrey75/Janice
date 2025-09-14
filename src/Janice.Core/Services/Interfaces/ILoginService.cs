@@ -1,6 +1,6 @@
-namespace Janet.Core.Services.Interfaces;
+namespace Janice.Core.Services.Interfaces;
 
-using Janet.Core.Models;
+using Janice.Core.Models;
 
 
 public interface ILoginService

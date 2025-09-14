@@ -1,5 +1,5 @@
-namespace Janet.Core.Enums;
-
+namespace Janice.Core.Enums
+{
     public enum Role
     {
         System,
@@ -7,3 +7,4 @@ namespace Janet.Core.Enums;
         Assistant,
         Tool
     }
+}

@@ -1,9 +1,9 @@
-using Janet.Core.Models;
+using Janice.Core.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Janet.Core.Services.Interfaces
+namespace Janice.Core.Services.Interfaces
 {
     /// <summary>
     /// Defines the contract for a service that communicates with the Ollama API.

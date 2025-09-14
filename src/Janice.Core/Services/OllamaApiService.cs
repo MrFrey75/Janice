@@ -1,5 +1,5 @@
-using Janet.Core.Models;
-using Janet.Core.Services.Interfaces;
+using Janice.Core.Models;
+using Janice.Core.Services.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Janet.Core.Services
+namespace Janice.Core.Services
 {
     /// <summary>
     /// A service for interacting with the Ollama API.

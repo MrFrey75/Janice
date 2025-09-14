@@ -1,3 +1,4 @@
+using Janice.Core.Models;
 namespace Janice.Core.Services.Interfaces
 {
     public interface IConfigService

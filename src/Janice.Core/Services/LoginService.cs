@@ -1,7 +1,7 @@
-namespace Janet.Core.Services;
+namespace Janice.Core.Services;
 
-using Janet.Core.Models;
-using Janet.Core.Services.Interfaces;
+using Janice.Core.Models;
+using Janice.Core.Services.Interfaces;
 using System.Threading.Tasks;
 
 
